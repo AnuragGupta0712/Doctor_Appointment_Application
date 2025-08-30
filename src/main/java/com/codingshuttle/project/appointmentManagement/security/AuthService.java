@@ -89,6 +89,7 @@ public class AuthService {
         String email = oAuth2User.getAttribute("email"); // This field , we will get only at those places who provide us email, for example if we are doing with twitter this field will be null
         String name = oAuth2User.getAttribute("name");
 
+        // Here we are considering email received from oAuth2User as our username
         User emailUser = userRepository.findByUsername(email).orElse(null); // If we have a valid email, then only we will be able to get an emailUser
 
         if(user == null && emailUser == null) {
@@ -113,14 +114,17 @@ public class AuthService {
 }
 
 // Use this to understand the three possibilites of the above if else conditions
-//The `handleOAuth2LoginRequest` method, part of an `AuthService`, is designed to manage the process of users logging in or signing up via an OAuth2 provider (like Google, GitHub, etc.). It's typically invoked by an `OAuth2SuccessHandler` after a successful authentication with the external provider. The method is annotated with `@Transactional`, ensuring that the entire operation runs within a single database transaction.
+//The `handleOAuth2LoginRequest` method, part of an `AuthService`, is designed to manage the process of users logging in or signing up via an
+// OAuth2 provider (like Google, GitHub, etc.). It's typically invoked by an `OAuth2SuccessHandler` after a successful authentication with the external provider.
+// The method is annotated with `@Transactional`, ensuring that the entire operation runs within a single database transaction.
 //
 //Here's a step-by-step explanation of its flow:
 //
 //1.  **Determine Provider Type and ID**:
 //
 //      * `AuthProviderType providerType = authUtil.getProviderTypeFromRegistrationId(registrationId);`: It first uses `authUtil` to convert the OAuth2 provider's `registrationId` (e.g., "google", "github") into an internal `AuthProviderType` enum.
-//      * `String providerId = authUtil.determineProviderIdFromOAuth2User(oAuth2User, registrationId);`: It then extracts a unique identifier for the user from the `OAuth2User` object (which contains data from the OAuth2 provider). This `providerId` is specific to the user within that particular OAuth2 provider (e.g., Google's 'sub' claim, GitHub's 'id').
+//      * `String providerId = authUtil.determineProviderIdFromOAuth2User(oAuth2User, registrationId);`: It then extracts a unique identifier for the user from the `OAuth2User` object (which contains data from the OAuth2 provider).
+//      This `providerId` is specific to the user within that particular OAuth2 provider (e.g., Google's 'sub' claim, GitHub's 'id').
 //
 //2.  **Fetch User from Repository (by Provider ID and by Email)**:
 //

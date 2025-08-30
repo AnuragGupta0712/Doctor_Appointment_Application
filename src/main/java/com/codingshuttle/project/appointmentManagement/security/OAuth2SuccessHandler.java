@@ -29,6 +29,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) authentication;
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
+        //  The registration id here is nothing but "google" or "facebook" etc
         String registrationId = token.getAuthorizedClientRegistrationId();
 
         ResponseEntity<LoginResponseDto> loginResponse = authService.handleOAuth2LoginRequest(oAuth2User,
